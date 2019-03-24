@@ -3,7 +3,10 @@ module.exports = function solveSudoku(matrix) {
     let arr = [1,2,3,4,5,6,7,8,9]
     workMatrix = matrix;
     obj = {};
-    count = 0;    
+    count = 0; 
+    count2 = 0; 
+    let tempC ;
+    let f = 50
     for(let i = 0; i < 9; i++){
         for(let j = 0; j < 9; j++){
             if(workMatrix[i][j] == 0){
@@ -11,11 +14,13 @@ module.exports = function solveSudoku(matrix) {
             }
         }
     }
-  
+
     function solve(workMatrix){
         for(let i = 0; i < 9; i++){
             for(let j = 0; j < 9; j++){
                 if(workMatrix[i][j] == 0){
+                    count2++
+                       
                                  
                     if(!obj.hasOwnProperty([i])){ 
                             obj[i] = {}   
@@ -29,29 +34,51 @@ module.exports = function solveSudoku(matrix) {
                             // console.log('create'+ ' ' + i + ' ' +j)
                         }
                     }
+                  
 
+                   
                     if(obj.hasOwnProperty([i]) && obj[i].hasOwnProperty([j])){
-                        // console.log('k '+'i = '+i+' j = '+j+' count = '+ count)
+                        if(count2 > count){
+                            
+                            workMatrix[i][j] =  obj[i][j][0];
+                            count--;    
+                            tempC = count;  
+                            count2 = 0;  
+                        }
+                                         
                         checkRow(workMatrix,i,j);
                         checkCol(workMatrix,i,j);
                         checkSegment(workMatrix,i,j);
-
+                      
                         if(obj[i][j].length == 1){
-                            // console.log('SS'+i+j+' count = '+ count)
+                          
                             workMatrix[i][j] = obj[i][j][0];
-                            count--;
                            
+                            count--;    
+                            tempC = count;  
+                            count2 = 0;     
+                                
                             delete obj[i][j];
                             
                         }
-                    }                   
+                    
+                    } 
+                             
                 } else {
                     continue;
                 }
             }
-        }      
-  
-    
+        }
+
+      
+        f--
+    if (f != 0){
+        return solve(workMatrix)
+       
+    } else {
+        return
+      
+    }
        
    
     }
@@ -188,7 +215,14 @@ module.exports = function solveSudoku(matrix) {
 
    
     solve(workMatrix)
-        
+    for(let i = 0; i < 9; i++){
+        for(let j = 0; j < 9; j++){
+            if(workMatrix[i][j] == 0){
+                document.write('<br>'+ obj[i][j])   
+            }
+        }
+    }
+
     // // console.log(obj[0][7]);
     // // console.log(obj[0][8]);
 
